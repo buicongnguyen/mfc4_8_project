@@ -1,0 +1,6 @@
+*.VC.*
+x64/
+ipch/
+Debug/
+.suo
+Release/
