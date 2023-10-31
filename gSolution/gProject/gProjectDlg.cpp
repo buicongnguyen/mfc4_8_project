@@ -6,8 +6,10 @@
 #include "gProject.h"
 #include "gProjectDlg.h"
 #include "afxdialogex.h"
+#include "Process.h"
 
 #include<iostream>
+using namespace std; 
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -54,6 +56,7 @@ END_MESSAGE_MAP()
 
 CgProjectDlg::CgProjectDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(IDD_GPROJECT_DIALOG, pParent)
+	, m_nRadius(40)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -61,6 +64,7 @@ CgProjectDlg::CgProjectDlg(CWnd* pParent /*=NULL*/)
 void CgProjectDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Text(pDX, IDC_EDIT_RADIUS, m_nRadius);
 }
 
 BEGIN_MESSAGE_MAP(CgProjectDlg, CDialogEx)
@@ -70,6 +74,7 @@ BEGIN_MESSAGE_MAP(CgProjectDlg, CDialogEx)
 //	ON_BN_CLICKED(IDC_BTN_DLG, &CgProjectDlg::OnBnClickedBtnDlg)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BTN_MAKE_CIRCLE, &CgProjectDlg::OnBnClickedBtnMakeCircle)
+	ON_EN_CHANGE(IDC_EDIT_RADIUS, &CgProjectDlg::OnEnChangeEditRadius)
 END_MESSAGE_MAP()
 
 
@@ -107,13 +112,23 @@ BOOL CgProjectDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 	MoveWindow(0, 0, 1280, 800); // Main dialog set at 0, 0, size 1280x800 
 
-	m_pDlgImage = new CDlgImage; // init --> need to add delete later. 
+	m_pDlgImage = new CDlgImage(this); // init --> need to add delete later. 
 	m_pDlgImage->Create(IDD_DLGIMAGE, this); // id, windows 
 	m_pDlgImage->ShowWindow(SW_SHOW); // show the dialog 
 	
 	// move dlgImage dialog to left place 
 	m_pDlgImage->MoveWindow(0, 0, 640, 480);
 
+	InitBackgroundNoise();
+	//calculate the CenterMass by default: 
+	CProcess process; 
+	
+	m_pDlgImage->m_nRadius = m_nRadius; 
+	int ret = process.getCenterMass(&m_pDlgImage->m_image, m_pDlgImage->m_nMassCenterX, 
+		m_pDlgImage->m_nMassCenterY, m_pDlgImage->m_nRadius,
+		m_pDlgImage->m_nMassCenterX, m_pDlgImage->m_nMassCenterY);
+
+	cout << " center of mass " << m_pDlgImage->m_nMassCenterX << "," << m_pDlgImage->m_nMassCenterY;
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -200,7 +215,40 @@ void CgProjectDlg::OnBnClickedBtnMakeCircle()
 	int nPitch = m_pDlgImage->m_image.GetPitch();;
 
 	//memset(fm, 0xff, sizeof(unsigned char) * nWidth * nHeight);
-
+	UpdateData(TRUE); // update variable value 
+	
+	
 	m_pDlgImage->Invalidate();
 	
+}
+
+void CgProjectDlg::InitBackgroundNoise() {
+	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits(); // need unsigned char to access image data 
+	int nWidth = m_pDlgImage->m_image.GetWidth();
+	int nHeight = m_pDlgImage->m_image.GetHeight();;
+	int nPitch = m_pDlgImage->m_image.GetPitch();;
+
+	memset(fm, 0, sizeof(unsigned char) * nWidth * nHeight);
+	//memset(fm, 0xff, nWidth * nHeight);
+	for (int k = 0; k < MAX_POINT; k++) {
+		int x = rand() % nWidth;
+		int y = rand() % nHeight;
+		int val = rand() % 0xff;
+			if (val >=100)
+				fm[y*nPitch + x] = val;
+	}
+}
+
+
+
+void CgProjectDlg::OnEnChangeEditRadius()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+
+	Invalidate();
 }

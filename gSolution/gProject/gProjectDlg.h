@@ -14,7 +14,8 @@ public:
 
 	CDlgImage *m_pDlgImage; // member pointer declare 
 
-// Dialog Data
+	CEdit m_editRadius; 
+	// Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_GPROJECT_DIALOG };
 #endif
@@ -38,4 +39,10 @@ public:
 	afx_msg void OnDestroy();
 	void callFunc(int n); 
 	afx_msg void OnBnClickedBtnMakeCircle();
+private: 
+	void InitBackgroundNoise(); 
+public:
+	// radius of circle
+	int m_nRadius;
+	afx_msg void OnEnChangeEditRadius();
 };

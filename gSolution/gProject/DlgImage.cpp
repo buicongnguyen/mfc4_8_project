@@ -77,6 +77,12 @@ void CDlgImage::InitImage()
 
 	//memset(fm, 0xff, nWidth*nHeight);
 	memset(fm, 0xff, sizeof(unsigned char)*nWidth*nHeight);
+	
+	m_nMassCenterX = nWidth / 2;
+	m_nMassCenterY = nHeight / 2;
+	m_nRadius = min(nWidth, nHeight) / 4;
+	//int centerX = (rect.left + rect.right) / 2;
+	//int centerY = (rect.top + rect.bottom) / 2;
 }
 
 void CDlgImage::OnPaint()
@@ -89,6 +95,8 @@ void CDlgImage::OnPaint()
 	}
 	// use OnPaint draw result 
 	drawData(&dc); // add header 
+	
+	drawCrossMark(&dc, m_nMassCenterX, m_nMassCenterY);
 }
 
 void CDlgImage::drawData(CDC* pDC) {
@@ -114,6 +122,7 @@ void CDlgImage::drawData(CDC* pDC) {
 	pDC->SelectObject(pOldPen);	// put back old pen from pointer 
 	*/
 
+	/*
 	int radius = 20; 
 	CRect rect;
 	CPen pen;
@@ -123,6 +132,59 @@ void CDlgImage::drawData(CDC* pDC) {
 	rect.SetRect(0, 0, radius, radius);
 	rect.InflateRect(2, 2);
 	pDC->Ellipse(rect);
+
+	pDC->SelectObject(pOldPen);
+	*/
+
+	CRect rect;
+	GetClientRect(&rect);
+
+	// Create a yellow pen for the ring
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 2, COLOR_YELLOW); // Yellow pen
+	CPen* pOldPen = pDC->SelectObject(&pen);
+
+	// Create a null brush to make the ring hollow
+	CBrush nullBrush;
+	nullBrush.CreateStockObject(NULL_BRUSH);
+	CBrush* pOldBrush = pDC->SelectObject(&nullBrush);
+
+	// Calculate the center point
+	int centerX = (rect.left + rect.right) / 2;
+	int centerY = (rect.top + rect.bottom) / 2;
+
+	// Calculate the radius (adjust as needed)
+	//int radius = min(rect.Width(), rect.Height()) / 4;
+	int radius = m_nRadius;
+
+	// Draw the ring (ellipse)
+	pDC->Ellipse(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
+
+	// Restore the original pen and brush
+	pDC->SelectObject(pOldPen);
+	pDC->SelectObject(pOldBrush);
+}
+
+void CDlgImage::drawCrossMark(CDC* pDC, int centerX, int centerY)
+{
+	CRect rect;
+	GetClientRect(&rect);
+
+	//int centerX = rect.Width() / 2;
+	//int centerY = rect.Height() / 2;
+	int halfWidth = 4; // Adjust as needed
+
+	CPen pen;
+	pen.CreatePen(PS_SOLID, 1, COLOR_RED); // Create a black pen
+	CPen* pOldPen = pDC->SelectObject(&pen);
+
+	// Draw the horizontal line
+	pDC->MoveTo(centerX - halfWidth, centerY);
+	pDC->LineTo(centerX + halfWidth, centerY);
+
+	// Draw the vertical line
+	pDC->MoveTo(centerX, centerY - halfWidth);
+	pDC->LineTo(centerX, centerY + halfWidth);
 
 	pDC->SelectObject(pOldPen);
 }

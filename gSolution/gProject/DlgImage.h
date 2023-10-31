@@ -14,6 +14,10 @@ public:
 	CImage m_image;
 	CWnd* m_pParent; // CWindow : parent 
 
+	int m_nMassCenterX; 
+	int m_nMassCenterY;
+	int m_nRadius; 
+
 // Dialog Data
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_DLGIMAGE };
@@ -30,4 +34,5 @@ public:
 private: 
 	void InitImage();
 	void drawData(CDC* pDC);
+	void drawCrossMark(CDC* pDC, int centerX, int centerY);
 };

@@ -26,7 +26,7 @@
 #define COLOR_GREEN RGB(0,0xff,0)
 #define COLOR_BLUE RGB(0,0,0xff)
 #define COLOR_YELLOW RGB(0xff,0xff, 0)
-
+#define MAX_POINT 1000
 
 #ifndef _AFX_NO_OLE_SUPPORT
 #include <afxdtctl.h>           // MFC support for Internet Explorer 4 Common Controls
