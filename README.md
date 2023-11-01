@@ -4,6 +4,7 @@ Project requirements:
 		Draw a circle in this dialog. 
 	. User have one Edit box to input the radius of Circle 
 	. A button to redraw the Circle with given radius. 
+		Radius from 10 to 200
 	. Draw the circle with given radius: the ring with yellow color. 
 	. Draw a cross mark in center mass of the Circle. 
 

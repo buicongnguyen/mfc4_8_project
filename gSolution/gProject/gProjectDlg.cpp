@@ -75,6 +75,7 @@ BEGIN_MESSAGE_MAP(CgProjectDlg, CDialogEx)
 	ON_WM_DESTROY()
 	ON_BN_CLICKED(IDC_BTN_MAKE_CIRCLE, &CgProjectDlg::OnBnClickedBtnMakeCircle)
 	ON_EN_CHANGE(IDC_EDIT_RADIUS, &CgProjectDlg::OnEnChangeEditRadius)
+	ON_EN_UPDATE(IDC_EDIT_RADIUS, &CgProjectDlg::OnEnUpdateEditRadius)
 END_MESSAGE_MAP()
 
 
@@ -280,9 +281,39 @@ void CgProjectDlg::OnEnChangeEditRadius()
 	// Redraw the circle
 	Invalidate();
 	*/
+
+
+	//UpdateData(TRUE);
+	/*
+	if (m_nRadius < 10)
+		m_nRadius = 10;
+	else if (m_nRadius > 200)
+		m_nRadius = 200;
+
+	m_pDlgImage->m_nRadius = m_nRadius;
 	
-	
-	UpdateData(); 
-	
+	UpdateData(FALSE); 
+	*/
 	//Invalidate();
+}
+
+
+void CgProjectDlg::OnEnUpdateEditRadius()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function to send the EM_SETEVENTMASK message to the control
+	// with the ENM_UPDATE flag ORed into the lParam mask.
+
+	// TODO:  Add your control notification handler code here
+	UpdateData(TRUE);
+	
+	if (m_nRadius < 10)
+	m_nRadius = 10;
+	else if (m_nRadius > 200)
+	m_nRadius = 200;
+
+	m_pDlgImage->m_nRadius = m_nRadius;
+
+	//UpdateData(FALSE);
 }

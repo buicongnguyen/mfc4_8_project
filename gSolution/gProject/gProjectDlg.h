@@ -45,4 +45,5 @@ public:
 	// radius of circle
 	int m_nRadius;
 	afx_msg void OnEnChangeEditRadius();
+	afx_msg void OnEnUpdateEditRadius();
 };
