@@ -128,7 +128,7 @@ BOOL CgProjectDlg::OnInitDialog()
 		m_pDlgImage->m_nMassCenterY, m_pDlgImage->m_nRadius,
 		m_pDlgImage->m_nMassCenterX, m_pDlgImage->m_nMassCenterY);
 
-	cout << " center of mass " << m_pDlgImage->m_nMassCenterX << "," << m_pDlgImage->m_nMassCenterY;
+	cout << "Init  center of mass " << m_pDlgImage->m_nMassCenterX << "," << m_pDlgImage->m_nMassCenterY <<endl;
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -208,11 +208,20 @@ void CgProjectDlg::callFunc(int n) {
 void CgProjectDlg::OnBnClickedBtnMakeCircle()
 {
 	// TODO: Add your control notification handler code here
-	
+	UpdateData(FALSE);
 	unsigned char* fm = (unsigned char*)m_pDlgImage->m_image.GetBits(); // need unsigned char to access image data 
 	int nWidth = m_pDlgImage->m_image.GetWidth();
 	int nHeight = m_pDlgImage->m_image.GetHeight();;
 	int nPitch = m_pDlgImage->m_image.GetPitch();;
+
+	m_pDlgImage->m_nRadius = m_nRadius;
+	CProcess process;
+	int ret = process.getCenterMass(&m_pDlgImage->m_image, m_pDlgImage->m_nCenterX,
+		m_pDlgImage->m_nCenterY, m_pDlgImage->m_nRadius,
+		m_pDlgImage->m_nMassCenterX, m_pDlgImage->m_nMassCenterY);
+
+	cout << "Update center of mass " << m_pDlgImage->m_nMassCenterX << "," << m_pDlgImage->m_nMassCenterY << endl;
+
 
 	//memset(fm, 0xff, sizeof(unsigned char) * nWidth * nHeight);
 	UpdateData(TRUE); // update variable value 
@@ -249,6 +258,31 @@ void CgProjectDlg::OnEnChangeEditRadius()
 	// with the ENM_CHANGE flag ORed into the mask.
 
 	// TODO:  Add your control notification handler code here
+	/*
+	CString radiusStr;
+	m_editRadius.GetWindowText(radiusStr);
 
+	// Convert the text to an integer
+	int newRadius = _tstoi(radiusStr);
+
+	// Ensure the new radius is within the valid range (10 to 200)
+	if (newRadius < 10)
+		newRadius = 10;
+	else if (newRadius > 200)
+		newRadius = 200;
+
+	// Update the member variable and the Edit control
+	m_nRadius = newRadius;
+	CString newRadiusStr;
+	newRadiusStr.Format(_T("%d"), m_nRadius);
+	m_editRadius.SetWindowText(newRadiusStr);
+
+	// Redraw the circle
 	Invalidate();
+	*/
+	
+	
+	UpdateData(); 
+	
+	//Invalidate();
 }

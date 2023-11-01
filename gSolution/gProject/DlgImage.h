@@ -14,6 +14,8 @@ public:
 	CImage m_image;
 	CWnd* m_pParent; // CWindow : parent 
 
+	int m_nCenterX; 
+	int m_nCenterY; 
 	int m_nMassCenterX; 
 	int m_nMassCenterY;
 	int m_nRadius; 

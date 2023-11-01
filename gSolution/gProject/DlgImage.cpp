@@ -78,9 +78,12 @@ void CDlgImage::InitImage()
 	//memset(fm, 0xff, nWidth*nHeight);
 	memset(fm, 0xff, sizeof(unsigned char)*nWidth*nHeight);
 	
+	m_nCenterX = nWidth / 2;
+	m_nCenterY = nHeight / 2;
 	m_nMassCenterX = nWidth / 2;
 	m_nMassCenterY = nHeight / 2;
-	m_nRadius = min(nWidth, nHeight) / 4;
+	
+	//m_nRadius = min(nWidth, nHeight) / 4;
 	//int centerX = (rect.left + rect.right) / 2;
 	//int centerY = (rect.top + rect.bottom) / 2;
 }
@@ -140,8 +143,9 @@ void CDlgImage::drawData(CDC* pDC) {
 	GetClientRect(&rect);
 
 	// Create a yellow pen for the ring
+	int nPenThick = 2; 
 	CPen pen;
-	pen.CreatePen(PS_SOLID, 2, COLOR_YELLOW); // Yellow pen
+	pen.CreatePen(PS_SOLID, nPenThick, COLOR_YELLOW); // Yellow pen
 	CPen* pOldPen = pDC->SelectObject(&pen);
 
 	// Create a null brush to make the ring hollow
@@ -150,12 +154,15 @@ void CDlgImage::drawData(CDC* pDC) {
 	CBrush* pOldBrush = pDC->SelectObject(&nullBrush);
 
 	// Calculate the center point
-	int centerX = (rect.left + rect.right) / 2;
-	int centerY = (rect.top + rect.bottom) / 2;
+	// int centerX = (rect.left + rect.right) / 2;
+	// int centerY = (rect.top + rect.bottom) / 2;
+
+	int centerX = m_nCenterX;
+	int centerY = m_nCenterY;
 
 	// Calculate the radius (adjust as needed)
 	//int radius = min(rect.Width(), rect.Height()) / 4;
-	int radius = m_nRadius;
+	int radius = m_nRadius + nPenThick;
 
 	// Draw the ring (ellipse)
 	pDC->Ellipse(centerX - radius, centerY - radius, centerX + radius, centerY + radius);
@@ -165,7 +172,7 @@ void CDlgImage::drawData(CDC* pDC) {
 	pDC->SelectObject(pOldBrush);
 }
 
-void CDlgImage::drawCrossMark(CDC* pDC, int centerX, int centerY)
+void CDlgImage::drawCrossMark(CDC* pDC, int centerCrossX, int centerCrossY)
 {
 	CRect rect;
 	GetClientRect(&rect);
@@ -179,12 +186,12 @@ void CDlgImage::drawCrossMark(CDC* pDC, int centerX, int centerY)
 	CPen* pOldPen = pDC->SelectObject(&pen);
 
 	// Draw the horizontal line
-	pDC->MoveTo(centerX - halfWidth, centerY);
-	pDC->LineTo(centerX + halfWidth, centerY);
+	pDC->MoveTo(centerCrossX - halfWidth, centerCrossY);
+	pDC->LineTo(centerCrossX + halfWidth, centerCrossY);
 
 	// Draw the vertical line
-	pDC->MoveTo(centerX, centerY - halfWidth);
-	pDC->LineTo(centerX, centerY + halfWidth);
+	pDC->MoveTo(centerCrossX, centerCrossY - halfWidth);
+	pDC->LineTo(centerCrossX, centerCrossY + halfWidth);
 
 	pDC->SelectObject(pOldPen);
 }

@@ -48,6 +48,6 @@ int CProcess::getCenterMass(CImage *pImage, int centerX, int centerY, int radius
 	cenMassX = round(dCenterX);
 	cenMassY = round(dCenterY);
 
-	cout << dCenterX << "\t" << dCenterY << endl;
+	//cout << dCenterX << "\t" << dCenterY << endl;
 	return 0; 
 }
